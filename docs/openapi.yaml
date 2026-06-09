@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: TodoCamisetas API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000/api
+paths:
+  /customers:
+    get:
+      summary: List customers
+    post:
+      summary: Create customer
+  /customers/{id}:
+    get:
+      summary: Show customer
+    put:
+      summary: Update customer
+    delete:
+      summary: Delete customer
+  /customers/{id}/shirts:
+    get:
+      summary: List shirts by customer
+  /shirts:
+    get:
+      summary: List shirts
+    post:
+      summary: Create shirt
+  /shirts/{id}:
+    get:
+      summary: Show shirt
+      parameters:
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            type: integer
+    put:
+      summary: Update shirt
+    delete:
+      summary: Delete shirt
+  /shirts/{id}/sizes:
+    get:
+      summary: List sizes for a shirt
+    post:
+      summary: Attach a size to a shirt
+    put:
+      summary: Sync sizes for a shirt
+  /shirts/{shirtId}/sizes/{sizeId}:
+    delete:
+      summary: Detach a size from a shirt
+  /sizes:
+    get:
+      summary: List sizes
+    post:
+      summary: Create size
