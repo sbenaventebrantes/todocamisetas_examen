@@ -85,6 +85,6 @@ class ShirtController extends ApiController
     {
         $shirt->delete();
 
-        return response()->noContent();
+        return $this->noContent();
     }
 }

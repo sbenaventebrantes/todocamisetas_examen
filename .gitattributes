@@ -7,5 +7,13 @@
 *.php diff=php
 
 /.github export-ignore
+/.vscode export-ignore
+/.idea export-ignore
+/node_modules export-ignore
+/vendor export-ignore
+/storage export-ignore
+.env export-ignore
+.DS_Store export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+.gitignore export-ignore

@@ -72,7 +72,7 @@ class CustomerController extends ApiController
 
         $customer->delete();
 
-        return response()->noContent();
+        return $this->noContent();
     }
 
     public function shirts(string $customerId): JsonResponse

@@ -6,6 +6,21 @@ use App\Http\Controllers\Api\ShirtSizeController;
 use App\Http\Controllers\Api\SizeController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('health', function () {
+    return response()->json([
+        'message' => 'TodoCamisetas API funcionando',
+        'data' => [
+            'status' => 'ok',
+        ],
+    ]);
+});
+
+Route::get('swagger.yaml', function () {
+    return response()->file(base_path('docs/openapi.yaml'), [
+        'Content-Type' => 'text/yaml; charset=UTF-8',
+    ]);
+});
+
 Route::apiResource('customers', CustomerController::class);
 Route::get('customers/{customerId}/shirts', [CustomerController::class, 'shirts']);
 

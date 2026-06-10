@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('trade_name');
             $table->string('tax_id', 50)->unique();
             $table->string('address')->nullable();
-            $table->string('category', 30);
+            $table->enum('category', ['preferential', 'regular']);
             $table->string('contact_name');
             $table->string('contact_email');
             $table->decimal('offer_percentage', 5, 2)->nullable();

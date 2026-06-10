@@ -11,7 +11,7 @@ class ShirtResource extends JsonResource
     public function toArray(Request $request): array
     {
         $customer = $this->resolveConsultingCustomer($request);
-        $sizes = $this->relationLoaded('sizes') ? SizeResource::collection($this->sizes)->resolve($request) : [];
+        $sizes = $this->relationLoaded('sizes') ? $this->sizes->pluck('name')->values()->toArray() : [];
 
         return [
             'productId' => $this->product_id,
@@ -26,6 +26,7 @@ class ShirtResource extends JsonResource
             'details' => $this->details,
             'productCode' => $this->product_code,
             'finalPrice' => $this->resolveFinalPrice($customer),
+            'clientCategory' => $customer?->category ?? null,
             'sizes' => $sizes,
             'createdAt' => $this->created_at?->copy()->timezone(config('app.timezone'))->format('Y-m-d\TH:i:s.uP'),
             'updatedAt' => $this->updated_at?->copy()->timezone(config('app.timezone'))->format('Y-m-d\TH:i:s.uP'),

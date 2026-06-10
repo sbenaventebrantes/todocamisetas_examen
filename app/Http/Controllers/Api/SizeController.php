@@ -51,6 +51,6 @@ class SizeController extends ApiController
     {
         $size->delete();
 
-        return response()->noContent();
+        return $this->noContent();
     }
 }

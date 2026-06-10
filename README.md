@@ -1,6 +1,6 @@
 # TodoCamisetas API
 
-API backend para el examen de TodoCamisetas.
+API del examen de Desarrollo Backend.
 
 ## Equipo
 
@@ -8,129 +8,83 @@ API backend para el examen de TodoCamisetas.
 - Sofia Benavente
 - Mixiu Perez
 
-## Tecnologías
+## De que trata
 
-- Laravel
-- PHP 8.4
-- MySQL o SQLite
+API RESTful para gestionar clientes, camisetas y tallas de un negocio B2B.
+Tiene CRUD completo, relacion muchos a muchos entre camisetas y tallas,
+y un calculo de precio final segun la categoria del cliente.
 
-## Antes de empezar
+## Tecnologias
 
-1. Copia el archivo de entorno.
-2. Configura la base de datos.
-3. Ejecuta migraciones y seeders.
+Laravel 13, PHP 8.3+, MySQL 8, Docker Compose.
+
+## Como levantar el proyecto
 
 ```bash
 composer install
 cp .env.example .env
 php artisan key:generate
+docker compose up -d --build
+docker compose exec app php artisan migrate:fresh --seed --force
 ```
 
-## Configuración del `.env`
+La API queda en `http://localhost:8000/api`.
 
-Revisa al menos estas variables:
+## Documentacion (Swagger)
 
-```env
-APP_NAME="TodoCamisetas API"
-DB_CONNECTION=sqlite
-DB_DATABASE=/ruta/completa/a/database.sqlite
-```
+Hay dos formas de ver la documentacion de la API:
 
-Si prefieres MySQL, ajusta `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`.
+1. **Swagger UI** — abrir en el navegador:
+   ```
+   http://localhost:8000/swagger
+   ```
+2. **Archivo YAML** — `docs/openapi.yaml`
 
-## Base de datos
+Si haces cambios y queres regenerar el YAML:
 
 ```bash
-php artisan migrate:fresh --seed
+docker compose exec app php artisan docs:openapi
 ```
-
-Ese comando deja la base limpia y carga los datos de demo.
-
-## Levantar el proyecto
-
-```bash
-php artisan serve
-```
-
-La API queda disponible normalmente en `http://127.0.0.1:8000`.
-
-## Datos de demo
-
-El seeder deja cargados:
-
-- `90minutos` con categoría `preferential`
-- `tdeportes` con categoría `regular`
-- tallas de ejemplo
-- camisetas de ejemplo
-- relaciones entre camisetas y tallas
 
 ## Endpoints
 
-### Root
+Todas las rutas van con `/api` adelante.
 
-- `GET /`
+| Metodo | Ruta | Que hace |
+|---|---|---|
+| GET | `/health` | Verificar que la API funciona |
+| GET | `/customers` | Listar clientes |
+| POST | `/customers` | Crear cliente |
+| GET | `/customers/{id}` | Ver cliente |
+| PUT | `/customers/{id}` | Actualizar cliente |
+| DELETE | `/customers/{id}` | Eliminar cliente |
+| GET | `/customers/{id}/shirts` | Camisetas de un cliente |
+| GET | `/shirts` | Listar camisetas |
+| POST | `/shirts` | Crear camiseta |
+| GET | `/shirts/{id}?customerId=X` | Ver camiseta con precio final |
+| PUT | `/shirts/{id}` | Actualizar camiseta |
+| DELETE | `/shirts/{id}` | Eliminar camiseta |
+| GET | `/shirts/{id}/sizes` | Tallas de una camiseta |
+| POST | `/shirts/{id}/sizes` | Asociar talla |
+| PUT | `/shirts/{id}/sizes` | Sincronizar tallas |
+| DELETE | `/shirts/{id}/sizes/{sizeId}` | Desasociar talla |
+| GET | `/sizes` | Listar tallas |
+| POST | `/sizes` | Crear talla |
+| GET | `/sizes/{id}` | Ver talla |
+| PUT | `/sizes/{id}` | Actualizar talla |
+| DELETE | `/sizes/{id}` | Eliminar talla |
 
-### Customers
+## Precio final
 
-- `GET /api/customers`
-- `POST /api/customers`
-- `GET /api/customers/{customer}`
-- `PUT /api/customers/{customer}`
-- `DELETE /api/customers/{customer}`
-- `GET /api/customers/{customer}/shirts`
+Si consultas una camiseta con `?customerId=X`:
+- Cliente **Preferencial** + camiseta con `priceOffer` → `finalPrice` = `priceOffer`
+- En cualquier otro caso → `finalPrice` = `price`
 
-### Shirts
+Ejemplo:
 
-- `GET /api/shirts`
-- `POST /api/shirts`
-- `GET /api/shirts/{shirt}`
-- `PUT /api/shirts/{shirt}`
-- `DELETE /api/shirts/{shirt}`
+```
+GET /api/shirts/{id}?customerId={idPreferencial}
+Response: { "finalPrice": 64990, "clientCategory": "preferential" }
+```
 
-### Sizes de una shirt
-
-- `GET /api/shirts/{shirt}/sizes`
-- `POST /api/shirts/{shirt}/sizes`
-- `PUT /api/shirts/{shirt}/sizes`
-- `DELETE /api/shirts/{shirt}/sizes/{size}`
-
-### Sizes
-
-- `GET /api/sizes`
-- `POST /api/sizes`
-- `GET /api/sizes/{size}`
-- `PUT /api/sizes/{size}`
-- `DELETE /api/sizes/{size}`
-
-## Casos importantes para probar
-
-1. Listar customers, shirts y sizes.
-2. Crear un customer nuevo.
-3. Crear una shirt con `productCode` único.
-4. Consultar una shirt con `customerId` para ver `finalPrice`.
-5. Asociar una talla a una shirt.
-6. Intentar asociar la misma talla dos veces.
-7. Intentar eliminar un customer con shirts asociadas.
-
-## Respuestas
-
-- Las respuestas de colección usan `data`.
-- Las respuestas individuales también usan `data`.
-- Las creaciones y actualizaciones devuelven `message` y `data`.
-- Los errores devuelven `message` y, cuando aplica, `errors`.
-
-## Estructura
-
-- `app/Http/Controllers/Api`: controladores de la API.
-- `app/Http/Requests`: validaciones.
-- `app/Http/Resources`: salida JSON en camelCase.
-- `app/Models`: modelos y relaciones.
-- `database/migrations`: tablas.
-- `database/seeders`: datos de demo.
-- `docs`: OpenAPI, Postman y apoyo para el informe.
-
-## Documentación útil
-
-- `docs/openapi.yaml`
-- `docs/postman_collection.json`
-- `docs/exam_support.md`
+Abrir el Swagger UI en `http://localhost:8000/swagger` para probar desde el navegador.

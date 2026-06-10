@@ -67,6 +67,6 @@ class ShirtSizeController extends ApiController
             ->where('size_id', $size->getKey())
             ->delete();
 
-        return response()->noContent();
+        return $this->noContent();
     }
 }

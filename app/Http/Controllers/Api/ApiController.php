@@ -27,4 +27,9 @@ class ApiController extends Controller
 
         return response()->json($payload, $status);
     }
+
+    protected function noContent(): JsonResponse
+    {
+        return response()->json(null, 204);
+    }
 }

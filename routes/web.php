@@ -5,3 +5,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return response()->json(['message' => 'TodoCamisetas API']);
 });
+
+Route::view('/swagger', 'swagger');
