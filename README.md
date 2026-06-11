@@ -4,7 +4,7 @@ API del examen de Desarrollo Backend.
 
 ## Equipo
 
-- Andrea Carre
+- Andrea Carreño
 - Sofia Benavente
 - Mixiu Perez
 
